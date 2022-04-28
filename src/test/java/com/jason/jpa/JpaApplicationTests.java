@@ -45,8 +45,13 @@ class JpaApplicationTests {
 
 	@Test
 	public void testDelete(){
-		Products product = repository.findById(1).get();
-		repository.deleteById(product.getId());
+		if( repository.existsById(1) )
+			repository.deleteById(1);
+	}
+
+	@Test
+	public void testCount(){
+		System.out.println("Total records "+repository.count());
 	}
 
 }
