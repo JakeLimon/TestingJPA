@@ -1,6 +1,8 @@
 package com.jason.jpa;
 
+import com.jason.jpa.entities.Employee;
 import com.jason.jpa.entities.Products;
+import com.jason.jpa.repository.EmployeeRepository;
 import com.jason.jpa.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ class JpaApplicationTests {
 
 	@Autowired
 	ProductRepository repository;
+	@Autowired
+	private EmployeeRepository employeeRepository;
+
 
 	@Test
 	void contextLoads() {
@@ -52,6 +57,16 @@ class JpaApplicationTests {
 	@Test
 	public void testCount(){
 		System.out.println("Total records "+repository.count());
+	}
+
+	// Aqui vamos a testear nuestro generador propio para los ID
+
+	@Test
+	public void testSaveEmployee(){
+		Employee employee = new Employee();
+		employee.setName("Jason");
+
+		employeeRepository.save(employee);
 	}
 
 }
