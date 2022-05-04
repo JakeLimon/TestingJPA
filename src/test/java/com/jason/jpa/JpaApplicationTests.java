@@ -1,12 +1,18 @@
 package com.jason.jpa;
 
 import com.jason.jpa.entities.Employee;
+import com.jason.jpa.entities.MyProducts;
 import com.jason.jpa.entities.Products;
 import com.jason.jpa.repository.EmployeeRepository;
+import com.jason.jpa.repository.MyProductsRepository;
 import com.jason.jpa.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -15,7 +21,9 @@ class JpaApplicationTests {
 	@Autowired
 	ProductRepository repository;
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	EmployeeRepository employeeRepository;
+	@Autowired
+	MyProductsRepository myProductsRepository;
 
 
 	@Test
@@ -67,6 +75,32 @@ class JpaApplicationTests {
 		employee.setName("Jason");
 
 		employeeRepository.save(employee);
+	}
+
+	// Aqui por repasar voy hacer el insert con un test para mi entidad MyProducts
+
+	@Test
+	public void testMyProductsSave(){
+		MyProducts product = new MyProducts();
+		product.setName("Dell");
+		product.setDesc("Laptop para tus tareas marca DELL");
+		product.setPrice(23_000);
+		myProductsRepository.save(product);
+
+	}
+
+	@Test
+	public void testFindByName(){
+		List<MyProducts> products = myProductsRepository.findByName("IPhone");
+		products.forEach(p -> System.out.println("El " + p.getName() +" cuesta " +p.getPrice()));
+	}
+
+	// En este test vere como funciona cundo el nombre es fierente en la base de datos pero en mi entidad es otro
+
+	@Test
+	public void testOtherName(){
+		List<MyProducts> products = myProductsRepository.findByPrice(25000);
+		products.forEach(p -> System.out.println("Diferente nombre en la base de datos. El " + p.getName() +" cuesta " +p.getPrice()));
 	}
 
 }
