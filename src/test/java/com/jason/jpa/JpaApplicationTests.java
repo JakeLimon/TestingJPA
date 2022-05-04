@@ -2,14 +2,20 @@ package com.jason.jpa;
 
 import com.jason.jpa.entities.Employee;
 import com.jason.jpa.entities.MyProducts;
+import com.jason.jpa.entities.Productos;
 import com.jason.jpa.entities.Products;
 import com.jason.jpa.repository.EmployeeRepository;
 import com.jason.jpa.repository.MyProductsRepository;
 import com.jason.jpa.repository.ProductRepository;
+import com.jason.jpa.repository.ProductosRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +30,8 @@ class JpaApplicationTests {
 	EmployeeRepository employeeRepository;
 	@Autowired
 	MyProductsRepository myProductsRepository;
+	@Autowired
+	ProductosRepository productosRepository;
 
 
 	@Test
@@ -101,6 +109,31 @@ class JpaApplicationTests {
 	public void testOtherName(){
 		List<MyProducts> products = myProductsRepository.findByPrice(25000);
 		products.forEach(p -> System.out.println("Diferente nombre en la base de datos. El " + p.getName() +" cuesta " +p.getPrice()));
+	}
+
+	// A partir de aqui vamos a crear los test para las paginaciones
+
+	@Test
+	public void testSaveProducto(){
+		Productos producto = new Productos();
+		producto.setNombre("Guitarra Epihone");
+		producto.setDesc("Demuestra que eres el mejor rockero de la ciudad");
+		productosRepository.save(producto);
+	}
+
+	// Una vez guardados los valores camos a crar un teste donde aplicamos la paginacion
+
+	@Test
+	public void testFindAllPaging(){
+		Page<Productos> page = productosRepository.findAll(PageRequest.of(0,3));
+		page.forEach( data -> System.out.printf("%s es %s y la descripcion es: %s \n",data.getId(), data.getNombre(), data.getDesc()));
+	}
+
+	@Test
+	public void testFindAllSort(){
+//		Iterable<Productos> results = productosRepository.findAll(Sort.by("nombre").descending().and(Sort.by("desc").ascending()));
+		Iterable<Productos> results = productosRepository.findAll(Sort.by("desc").descending().and(Sort.by("nombre").ascending()));
+		results.forEach(data -> System.out.printf("%s =====> %s \n", data.getDesc(), data.getNombre()));
 	}
 
 }
