@@ -1,13 +1,7 @@
 package com.jason.jpa;
 
-import com.jason.jpa.entities.Employee;
-import com.jason.jpa.entities.MyProducts;
-import com.jason.jpa.entities.Productos;
-import com.jason.jpa.entities.Products;
-import com.jason.jpa.repository.EmployeeRepository;
-import com.jason.jpa.repository.MyProductsRepository;
-import com.jason.jpa.repository.ProductRepository;
-import com.jason.jpa.repository.ProductosRepository;
+import com.jason.jpa.entities.*;
+import com.jason.jpa.repository.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +26,8 @@ class JpaApplicationTests {
 	MyProductsRepository myProductsRepository;
 	@Autowired
 	ProductosRepository productosRepository;
+	@Autowired
+	StudentRepository studentRepository;
 
 
 	@Test
@@ -134,6 +130,34 @@ class JpaApplicationTests {
 //		Iterable<Productos> results = productosRepository.findAll(Sort.by("nombre").descending().and(Sort.by("desc").ascending()));
 		Iterable<Productos> results = productosRepository.findAll(Sort.by("desc").descending().and(Sort.by("nombre").ascending()));
 		results.forEach(data -> System.out.printf("%s =====> %s \n", data.getDesc(), data.getNombre()));
+	}
+
+	// Vamos a estudiar un poco de JPQL asi que se creo una tabla de student para este ejercicio y vamos a guardar un par de datos
+
+	@Test
+	public void testSaveStudent(){
+		Student student = new Student();
+		student.setFirstName("Jason");
+		student.setLastName("Limon");
+		student.setScore(10);
+
+		studentRepository.save(student);
+	}
+
+	// Primer test para obtener a todos los estudiantes
+	@Test
+	public void testFindAllJPQL(){
+		studentRepository.findAllStudents().forEach( s -> System.out.println(s.toString()));
+	}
+
+	@Test
+	public void testFindAllSpecialCase(){
+		studentRepository.findAllStudentSpecialCase().forEach( s -> System.out.println(s.toString()));
+	}
+
+	@Test
+	public void testMultipleCase(){
+		studentRepository.finMultipleCase().forEach(System.out::println);
 	}
 
 }
