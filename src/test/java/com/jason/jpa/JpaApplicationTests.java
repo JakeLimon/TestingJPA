@@ -8,9 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -158,6 +158,39 @@ class JpaApplicationTests {
 	@Test
 	public void testMultipleCase(){
 		studentRepository.finMultipleCase().forEach(System.out::println);
+	}
+
+	// Ahora si el test de multiples casos
+	@Test
+	public void testMultipleCases(){
+		studentRepository.findMultiplesCases().forEach(student -> System.out.println(student[0] +" " +student[1]));
+	}
+
+	@Test
+	public void testFindWithParameter(){
+		studentRepository.findWithParameter("Jay").forEach(s -> System.out.println(s.toString()));
+	}
+
+	@Test
+	public void testMultipleParameters(){
+		studentRepository.findBetweenScore(7, 10).forEach(s -> System.out.println(s.toString()));
+	}
+
+	@Test
+	@Transactional
+	@Rollback(false)
+	public void testDeleteByFirstName(){
+		studentRepository.deleteStudentByFirstName("Giovani");
+	}
+
+	@Test
+	public void testNQ(){
+		studentRepository.findStudentsByNQ().forEach(s -> System.out.println(s.toString()));
+	}
+
+	@Test
+	public void testNQParameter(){
+		studentRepository.findNQParameter("Jason").forEach(s -> System.out.println(s.toString()));
 	}
 
 }
